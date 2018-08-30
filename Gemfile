@@ -9,6 +9,7 @@ gem 'pg'
 gem 'haml'
 gem 'telegram-bot-ruby'
 gem 'dry-auto_inject'
+gem 'sidekiq'
 
 group :development do
   # Code reloading

@@ -1,6 +1,7 @@
 require 'bundler/setup'
 require 'hanami/setup'
 require 'hanami/model'
+require 'sidekiq/web'
 require_relative '../lib/vpn_generator'
 require_relative '../apps/webhooks/application'
 require_relative '../apps/web/application'

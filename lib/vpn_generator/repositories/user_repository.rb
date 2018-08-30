@@ -8,4 +8,8 @@ class UserRepository < Hanami::Repository
       language_code: user_data[:language_code]
     )
   end
+
+  def find_by(attribute = {})
+    users.where(**attribute).one
+  end
 end
