@@ -11,6 +11,13 @@ gem 'telegram-bot-ruby'
 gem 'dry-auto_inject'
 gem 'sidekiq'
 
+# Key generator
+gem 'rest-client'
+gem 'nokogiri'
+gem 'json'
+gem 'capybara'
+gem 'mechanize'
+
 group :development do
   # Code reloading
   # See: http://hanamirb.org/guides/projects/code-reloading

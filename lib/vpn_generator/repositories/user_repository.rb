@@ -10,6 +10,11 @@ class UserRepository < Hanami::Repository
   end
 
   def find_by(attribute = {})
-    users.where(**attribute).one
+    users.where(**attribute).first
+  end
+
+  def key_sended(id)
+    user = find(id)
+    update(id, last_key_generated_at: Time.now, keys_generated: user.keys_generated + 1)
   end
 end

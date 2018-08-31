@@ -5,30 +5,44 @@ module Webhooks::Controllers::Telegram
     include Webhooks::Action
 
     def call(params)
+      puts params[:message]
       result = Interactors::Users::Create.new.call(params[:message][:from])
       if result.success?
-        # Bot::RespondWorker.perform_async(user: result.user)
-        Interactors::Bot::Respond.new.call(user: result.user, text: greeting)
+        respond_to result.user
       end
-      # status 200, 'Ok'
-      # token = ENV['TELEGRAM_TOKEN']
-      # @bot = Telegram::Bot::Client.new(token)
-      # if params[:message][:text].eql? '/start'
-      #   greeting(params[:message][:chat][:id])
-      # elsif params[:message][:text].eql? 'Generate'
-      #   send_key(params[:message][:chat][:id])
-      # end
     end
 
-    def send_key(chat_id); end
-
-    def greeting
-      'Good day! This bot is designed to generate free keys for the hidemyna.me site. To get a new key, click the "Generate" button below'
+    def respond_to(user)
+      return gtfo!(user) unless params[:message][:from][:username].eql? 'LazyNick'
+      return send_message(user.id, 'Greetings') if params[:message][:text].eql? '/start'
+      key_generating(user) if params[:message][:text].eql? 'Generate'
     end
 
-    def reply_markup
-      kb = [ Telegram::Bot::Types::KeyboardButton.new(text: 'Generate') ]
-      Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb)
+    def key_generating(user)
+      return not_yet(user) unless more_than_one_day_from_last_generating(user)
+      send_message(user.id, 'GeneratedKey')
+      send_message(user.id, 'PleaseWait')
+      UserRepository.new.key_sended(user.id)
+    end
+
+    def not_yet(user)
+      send_message(user.id, 'NotYet')
+    end
+
+    def more_than_one_day_from_last_generating(user)
+      (Time.now - user.last_key_generated_at) > 24 * 60 * 60
+    end
+
+    def send_message(user_id, template_name)
+      Bot::RespondWorker.perform_async(user_id: user_id, template_name: template_name)
+    end
+
+    def gtfo!(result)
+      Interactors::Bot::Respond.new.call(user: user, text: development)
+    end
+
+    def development
+      'The bot is currently under development. Thanks for your patience'
     end
   end
 end

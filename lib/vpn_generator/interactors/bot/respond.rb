@@ -6,11 +6,11 @@ module Interactors
       include Hanami::Interactor
       include Import['bot']
 
-      def call(user:, text:, reply_markup: nil)
+      def call(user:, template:)
         bot.api.send_message(
           chat_id: user.messenger_id,
-          text: text,
-          reply_markup: reply_markup
+          text: template.text,
+          reply_markup: template.reply_markup
         )
       end
     end

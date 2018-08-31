@@ -1,6 +1,8 @@
 require 'hanami/helpers'
 require 'hanami/assets'
 
+Sidekiq::Web.set :session_secret, ENV['WEB_SESSIONS_SECRET']
+
 module Web
   class Application < Hanami::Application
     configure do
