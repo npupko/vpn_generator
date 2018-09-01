@@ -17,6 +17,7 @@ gem 'nokogiri'
 gem 'json'
 gem 'capybara'
 gem 'mechanize'
+gem 'dotenv', '~> 2.0'
 
 group :development do
   # Code reloading
@@ -26,7 +27,6 @@ group :development do
 end
 
 group :test, :development do
-  gem 'dotenv', '~> 2.0'
   gem 'pry'
 end
 
@@ -37,5 +37,5 @@ group :test do
 end
 
 group :production do
-  # gem 'puma'
+  gem 'puma'
 end
