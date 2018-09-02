@@ -29,6 +29,7 @@ module Webhooks::Controllers::Telegram
     end
 
     def more_than_one_day_from_last_generating(user)
+      return true unless user.last_key_generated_at
       (Time.now - user.last_key_generated_at) > 24 * 60 * 60
     end
 

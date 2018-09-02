@@ -5,7 +5,7 @@ module Templates
     end
 
     def reply_markup
-      nil
+      Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: [%w(Generate)])
     end
   end
 end
