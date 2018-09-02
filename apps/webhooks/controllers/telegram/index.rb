@@ -7,13 +7,12 @@ module Webhooks::Controllers::Telegram
     def call(params)
       puts params[:message]
       result = Interactors::Users::Create.new.call(params[:message][:from])
-      if result.success?
-        respond_to result.user
-      end
+      respond_to result.user if result.success?
     end
 
+    private
+
     def respond_to(user)
-      return gtfo!(user) unless params[:message][:from][:username].eql? 'LazyNick'
       return send_message(user.id, 'Greetings') if params[:message][:text].eql? '/start'
       key_generating(user) if params[:message][:text].eql? 'Generate'
     end
@@ -35,14 +34,6 @@ module Webhooks::Controllers::Telegram
 
     def send_message(user_id, template_name)
       Bot::RespondWorker.perform_async(user_id: user_id, template_name: template_name)
-    end
-
-    def gtfo!(result)
-      Interactors::Bot::Respond.new.call(user: user, text: development)
-    end
-
-    def development
-      'The bot is currently under development. Thanks for your patience'
     end
   end
 end
